@@ -82,7 +82,7 @@
         var new_marker = createMarker(map, locations[i], infowindow);
         bounds.extend(new_marker.position);
         }
-        //map.fitBounds(bounds);
+        //map.fitBounds(bounds); // zoom to latest marker
         }
 
         function createMarker(map, location, infowindow) {
@@ -100,7 +100,7 @@
         google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent('<div>'+
         '<p>' + location.title + '</p>' +
-        '<p>' + location.timestamp + '</p>'
+        '<p>' + location.timestamp + '</p>' +
         '</div>');
         infowindow.open(map, marker);
         });
