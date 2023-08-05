@@ -99,7 +99,8 @@
         });
         google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent('<div>'+
-        location.title +
+        '<p>' + location.title + '</p>' +
+        '<p>' + location.timestamp + '</p>'
         '</div>');
         infowindow.open(map, marker);
         });
