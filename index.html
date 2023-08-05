@@ -59,10 +59,12 @@
             // Modify the code below to suit the structure of your spreadsheet.
             $(data.values).each(function() {
                 var location = {};
-                    location.title = this[0];
-                    location.timestamp = this[3];
-                    location.latitude = parseFloat(this[4]);
-                        location.longitude = parseFloat(this[5]);
+                    location.runner = this[0];
+                    location.startdatetime = this[2];
+                    location.timestamp = this[4];
+                    location.timestampOriginal = this[5];
+                    location.latitude = parseFloat(this[6]);
+                        location.longitude = parseFloat(this[7]);
                         locations.push(location);
             });
 
@@ -95,12 +97,14 @@
         var marker = new google.maps.Marker({
         position: position,
         map: map,
-        title: location.title,
+        title: location.runner,
         });
         google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent('<div>'+
-        '<p>' + location.title + '</p>' +
-        '<p>' + location.timestamp + '</p>' +
+        '<p>' + location.runner + '</p>' +
+        '<p>Startdatetime: ' + location.startdatetime + '<br />' +
+           'Datetime: ' + location.timestamp + '<br />' +
+            'Original datetime: ' + location.timestampOriginal +'</p>' +
         '</div>');
         infowindow.open(map, marker);
         });
