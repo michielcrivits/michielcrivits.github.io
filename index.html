@@ -59,10 +59,10 @@
             // Modify the code below to suit the structure of your spreadsheet.
             $(data.values).each(function() {
                 var location = {};
-                    location.title = this[1];
-                    location.timestamp = this[4];
-                    location.latitude = parseFloat(this[5]);
-                        location.longitude = parseFloat(this[6]);
+                    location.title = this[0];
+                    location.timestamp = this[3];
+                    location.latitude = parseFloat(this[4]);
+                        location.longitude = parseFloat(this[5]);
                         locations.push(location);
             });
 
