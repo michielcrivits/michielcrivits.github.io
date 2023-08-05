@@ -34,7 +34,7 @@
 				{
 					parser = new GPXParser(request.responseXML, map);
 					parser.setTrackColour("#ff0000");					// Set the track line colour
-					parser.setTrackWidth(5);							// Set the track line width
+					parser.setTrackWidth(3);							// Set the track line width
 					parser.setMinTrackPointDelta(0.001);				// Set the minimum distance between track points
 					parser.centerAndZoom(request.responseXML);			// Center and Zoom the map over all the points.
 					parser.addTrackpointsToMap();						// Add the trackpoints
