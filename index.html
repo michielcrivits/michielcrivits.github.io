@@ -160,14 +160,17 @@
 
             setLocations(MyMap, locations);
         });
-        console.log(locations[0].runner);
-        console.log(locations[0].currentFKT);
-        console.log(locations[1].currentFKT);
+        
         //var currentFKTDistanceDone = locations.find((element) => element.currentFKT == '1');
         //console.log(currentFKTDistanceDone);
         //locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone
             
         //});
+        }
+        function fillVsCurrentFKT(){
+            console.log(locations[0].runner);
+        console.log(locations[0].currentFKT);
+        console.log(locations[1].currentFKT);
         }
 
         function setLocations(map, locations) {
@@ -239,6 +242,7 @@
             await initialLoadGPXDistances("HRP.gpx.xml");
 
             addMarkers();
+            fillVsCurrentFKT();
 		}
 
 		//]]>
