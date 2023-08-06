@@ -53,39 +53,37 @@
         // https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
         // Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
         // Finally, in the URL, fix the sheet name and the range that you are accessing from your spreadsheet. 'Sheet1' is the default name for the first sheet.
-        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:K7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function(data) {
+        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:K7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
             // data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.
             // Modify the code below to suit the structure of your spreadsheet.
-            $(data.values).each(function() {
+            $(data.values).each(function () {
                 var location = {};
-                    location.runner = this[0];
-                    location.startdatetime = this[2];
-                    location.startdatetimeOriginal = this[1];
-                    location.enddatetimeOriginal = this[3];
-                    location.timestamp = this[5];
-                    location.timestampOriginal = this[6];
-                    location.latitude = parseFloat(this[7]);
-                    location.longitude = parseFloat(this[8]);
-                    location.fkt = this[9];
-                    location.currentAttempt = this[10];
-                    locations.push(location);
+                location.runner = this[0];
+                location.startdatetime = this[2];
+                location.startdatetimeOriginal = this[1];
+                location.enddatetimeOriginal = this[3];
+                location.timestamp = this[5];
+                location.timestampOriginal = this[6];
+                location.latitude = parseFloat(this[7]);
+                location.longitude = parseFloat(this[8]);
+                location.fkt = this[9];
+                location.currentAttempt = this[10];
+                locations.push(location);
             });
-
 
             setLocations(MyMap, locations);
         });
         }
 
-
         function setLocations(map, locations) {
         var bounds = new google.maps.LatLngBounds();
         // Create nice, customised pop-up boxes, to appear when the marker is clicked on
         var infowindow = new google.maps.InfoWindow({
-        content: "Content String"
-        });
+                content: "Content String"
+            });
         for (var i = 0; i < locations.length; i++) {
-        var new_marker = createMarker(map, locations[i], infowindow);
-        bounds.extend(new_marker.position);
+            var new_marker = createMarker(map, locations[i], infowindow);
+            bounds.extend(new_marker.position);
         }
         //map.fitBounds(bounds); // zoom to latest marker
         }
@@ -94,40 +92,41 @@
 
         // Modify the code below to suit the structure of your spreadsheet (stored in variable 'location')
         var position = {
-        lat: parseFloat(location.latitude),
-        lng: parseFloat(location.longitude)
+            lat: parseFloat(location.latitude),
+            lng: parseFloat(location.longitude)
         };
         var marker = new google.maps.Marker({
-        position: position,
-        map: map,
-        title: location.runner + '(' + location.startdatetime.substring(6,10) + ')',
-        });
-        google.maps.event.addListener(marker, 'click', function() {
-        var content = '<div>'+ '<h2>' + location.runner + '</h2>';
-        if (location.currentAttempt == "1"){
-            content += '<h3>FKT attempt</h3>' +
-            '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '</p>' 
-        }
-        if (location.currentAttempt != "1"){
-            // compared to current attempt
-            content += '<h3>Compared to current attempt</h3>' +
-            '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '</p>' 
+                position: position,
+                map: map,
+                title: location.runner + ' (' + location.startdatetime.substring(6, 10) + ')'
+            });
+        google.maps.event.addListener(marker, 'click', function () {
+            var content = '<div>' + '<h2>' + location.runner + ' (' + location.startdatetime.substring(6, 10) + ')' + '</h2>';
+            if (location.currentAttempt == "1") {
+                content += '<h3>FKT attempt</h3>' +
+                '<p>Startdate: ' + location.startdatetime + '<br />' +
+                'Latest trackpoint: ' + location.timestamp + '</p>'
+            }
+            if (location.currentAttempt != "1") {
+                // compared to current attempt
+                content += '<h3>Compared to current attempt</h3>' +
+                '<p>Startdate: ' + location.startdatetime + '<br />' +
+                'Latest trackpoint: ' + location.timestamp + '</p>'
 
-            // previous attempt
-            content += '<h3>Original attempt</h3>' +
-            '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
+                // previous attempt
+                content += '<h3>Original attempt</h3>' +
+                '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
                 'Enddate: ' + location.enddatetimeOriginal + '</p>' +
 
                 '<p><b>FKT: ' + location.fkt + '</b></p>'
-            '</div>';
-        }
-        infowindow.setContent(content);
-        infowindow.open(map, marker);
+                '</div>';
+            }
+            infowindow.setContent(content);
+            infowindow.open(map, marker);
         });
         return marker;
         }
+
 
 
 
