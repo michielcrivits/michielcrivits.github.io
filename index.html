@@ -165,17 +165,8 @@
             setLocations(MyMap, locations);
         });
         
-        //var currentFKTDistanceDone = locations.find((element) => element.currentFKT == '1');
-        //console.log(currentFKTDistanceDone);
-        //locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone
-            
-        //});
         }
-        function fillVsCurrentFKT(){
-            console.log(locationsABC[0].runner);
-            console.log(locationsABC[0].currentFKT);
-            console.log(locationsABC[1].currentFKT);
-        }
+        
 
         function setLocations(map, locations) {
             locationsABC = locations;
@@ -209,7 +200,7 @@
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
-                'Vs current FKT: ' + location.vsCurrentFKT + 'km</p>'
+                'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
