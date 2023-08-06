@@ -61,6 +61,7 @@
                 var location = {};
                     location.runner = this[0];
                     location.startdatetime = this[2];
+                    location.startdatetimeOriginal = this[1];
                     location.timestamp = this[4];
                     location.timestampOriginal = this[5];
                     location.latitude = parseFloat(this[6]);
@@ -101,10 +102,13 @@
         });
         google.maps.event.addListener(marker, 'click', function() {
         infowindow.setContent('<div>'+
-        '<p>' + location.runner + '</p>' +
+        '<h2>' + location.runner + '</h2>' +
+        '<h3>Current attempt</h3>' +
         '<p>Startdatetime: ' + location.startdatetime + '<br />' +
-           'Datetime: ' + location.timestamp + '<br />' +
-            'Original datetime: ' + location.timestampOriginal +'</p>' +
+            'Current datetime: ' + location.timestamp + '</p>' +
+        '<h3>Original attempt</h3>' +
+        '<p>Startdatetime: ' + location.startdatetimeOriginal + '<br />' +
+            'Current datetime: ' + location.timestampOriginal + '</p>' +
         '</div>');
         infowindow.open(map, marker);
         });
