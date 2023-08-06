@@ -18,14 +18,16 @@
 		
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
 		<script src="loadgpx.js" type="text/javascript"></script>
+        <script src="distanceCalculator.js" type="text/javascript"></script>
 		<script type="text/javascript">
 
 		//<![CDATA[
 
 		var MyMap;
         var locations = [];
+        var distances = [];
 
-		function LoadGPXFileIntoGoogleMap(map, filename)
+		function loadGPXFileIntoGoogleMap(map, filename)
 		{
 			var request = new XMLHttpRequest();
 			request.open("GET", filename, true);
@@ -45,17 +47,71 @@
 			request.send(null);
 		}
 
+        async function initialLoadGPXDistances(filename)
+        {
+            const xml = await fetch("/src/HRP.gpx")
+            .then((res) => res.text())
+            .then((str) =>
+                new window.DOMParser().parseFromString(str, "text/xml")
+            );
+            const coords = Array.from(xml.querySelectorAll("trkpt")).map(
+            (element) =>
+                new google.maps.LatLng(
+                Number(element.getAttribute("lat")),
+                Number(element.getAttribute("lon"))
+                )
+            );
+            distances = coords.reduce((old, ne, index, original) => {
+            if (index > 0) {
+                var trackPnt = {};
+                trackPnt.latLng = ne;
+                trackPnt.distanceToPreviousTrackPnt = haversine_distance(
+                ne,
+                original[index - 1]
+                );
+                old.push(trackPnt);
+            } else {
+                var trackPnt = {};
+                trackPnt.latLng = ne;
+                trackPnt.distanceToPreviousTrackPnt = 0;
+                old.push(trackPnt);
+            }
+
+            return old;
+            }, []);
+        }
+
+        function GetDistanceDone(coord1){
+            var index = GetNearestTrackPnt(Wannes);
+            var distanceDone = GetDistanceToTrackPnt(index);
+            return distanceDone;
+        }
+
+        function GetNearestTrackPnt(coord1) {
+        var indexShortestDistance = -1;
+        var shortestDistance = -1;
+        distances.forEach((element, index) => {
+          var distance = haversine_distance(coord1, element.latLng);
+
+          if (shortestDistance == -1 || distance < shortestDistance) {
+            shortestDistance = distance;
+            indexShortestDistance = index;
+          }
+        });
+        
+        return indexShortestDistance;
+      }
+
+      function GetDistanceToTrackPnt(index) {
+        var totalDistance = 0.0;
+        for (let i = 0; i < index; i++) {
+          totalDistance += distances[i].distanceToPreviousTrackPnt;
+        }
+        return totalDistance;
+      }
                 
         function addMarkers() {
-
-        // Load data from an example Google spreadsheet that contains latitude and longitude columns using Google Sheets API v4 that returns JSON.
-        // Replace the ID of your Google spreadsheet and you API key in the URL:
-        // https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
-        // Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
-        // Finally, in the URL, fix the sheet name and the range that you are accessing from your spreadsheet. 'Sheet1' is the default name for the first sheet.
         $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:K7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
-            // data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.
-            // Modify the code below to suit the structure of your spreadsheet.
             $(data.values).each(function () {
                 var location = {};
                 location.runner = this[0];
@@ -68,6 +124,8 @@
                 location.longitude = parseFloat(this[8]);
                 location.fkt = this[9];
                 location.currentAttempt = this[10];
+                location.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))
+        ))
                 locations.push(location);
             });
 
@@ -77,7 +135,7 @@
 
         function setLocations(map, locations) {
         var bounds = new google.maps.LatLngBounds();
-        // Create nice, customised pop-up boxes, to appear when the marker is clicked on
+        // Create pop-up boxes, appear when the marker is clicked on
         var infowindow = new google.maps.InfoWindow({
                 content: "Content String"
             });
@@ -90,7 +148,6 @@
 
         function createMarker(map, location, infowindow) {
 
-        // Modify the code below to suit the structure of your spreadsheet (stored in variable 'location')
         var position = {
             lat: parseFloat(location.latitude),
             lng: parseFloat(location.longitude)
@@ -105,7 +162,8 @@
             if (location.currentAttempt == "1") {
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '</p>'
+                'Latest trackpoint: ' + location.timestamp + '<br />' +
+                'Latest trackpoint: ' + location.distanceDone + '</p>'
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
@@ -130,14 +188,15 @@
 
 
 
-		function initialiseMap()
+		async function initialiseMap()
 		{
 			MyMap = new google.maps.Map(document.getElementById("map"), {
           		center: {lat: 43.373058	, lng: -1.773991},
           		zoom: 10
 			});
 
-			LoadGPXFileIntoGoogleMap(MyMap, "HRP.gpx.xml");
+			loadGPXFileIntoGoogleMap(MyMap, "HRP.gpx.xml");
+            initialLoadGPXDistances("HRP.gpx.xml");
 
             addMarkers();
 		}
