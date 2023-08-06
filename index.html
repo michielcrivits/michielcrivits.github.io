@@ -26,6 +26,7 @@
 		var MyMap;
         var locations = [];
         var distances = [];
+        var totalDistance = 0;
 
 		function loadGPXFileIntoGoogleMap(map, filename)
 		{
@@ -79,6 +80,8 @@
 
             return old;
             }, []);
+
+            totalDistance = GetDistanceToTrackPnt(distances.length-1);
             //console.log('nr of distances: ' + distances.length)
         }
 
@@ -135,7 +138,7 @@
     }
                 
         function addMarkers() {
-        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:K7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
+        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:L7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
             $(data.values).each(function () {
                 var location = {};
                 location.runner = this[0];
@@ -148,6 +151,7 @@
                 location.longitude = parseFloat(this[8]);
                 location.fkt = this[9];
                 location.currentAttempt = this[10];
+                location.currentFKT = this[11];
                 location.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))
 
                 
@@ -195,13 +199,14 @@
                 // compared to current attempt
                 content += '<h3>Compared to current attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '<br />'
+                'Latest trackpoint: ' + location.timestamp + '<br />' +
                 'Distance done: ' + Math.ceil(location.distanceDone) + 'km</p>'
 
                 // previous attempt
                 content += '<h3>Original attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
-                'Enddate: ' + location.enddatetimeOriginal + '</p>' +
+                'Enddate: ' + location.enddatetimeOriginal + '<br />' +
+                'Distance done: ' + totalDistance + 'km</p>'
 
                 '<p><b>FKT: ' + location.fkt + '</b></p>'
                 '</div>';
