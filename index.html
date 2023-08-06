@@ -54,7 +54,7 @@
         // https://sheets.googleapis.com/v4/spreadsheets/ID_OF_YOUR_GOOGLE_SPREADSHEET/values/Sheet1!A2:Q?key=YOUR_API_KEY
         // Also make sure your API key is authorised to access Google Sheets API - you can enable that through your Google Developer console.
         // Finally, in the URL, fix the sheet name and the range that you are accessing from your spreadsheet. 'Sheet1' is the default name for the first sheet.
-        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:I7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function(data) {
+        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:K7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function(data) {
             // data.values contains the array of rows from the spreadsheet. Each row is also an array of cell values.
             // Modify the code below to suit the structure of your spreadsheet.
             $(data.values).each(function() {
@@ -62,10 +62,13 @@
                     location.runner = this[0];
                     location.startdatetime = this[2];
                     location.startdatetimeOriginal = this[1];
-                    location.timestamp = this[4];
-                    location.timestampOriginal = this[5];
-                    location.latitude = parseFloat(this[6]);
-                    location.longitude = parseFloat(this[7]);
+                    location.enddatetimeOriginal = this[3];
+                    location.timestamp = this[5];
+                    location.timestampOriginal = this[6];
+                    location.latitude = parseFloat(this[7]);
+                    location.longitude = parseFloat(this[8]);
+                    location.fkt = this[9];
+                    location.currentAttempt = this[10];
                     locations.push(location);
             });
 
@@ -101,15 +104,27 @@
         title: location.runner,
         });
         google.maps.event.addListener(marker, 'click', function() {
-        infowindow.setContent('<div>'+
-        '<h2>' + location.runner + '</h2>' +
-        '<h3>Current attempt</h3>' +
-        '<p>Startdatetime: ' + location.startdatetime + '<br />' +
-            'Current datetime: ' + location.timestamp + '</p>' +
-        '<h3>Original attempt</h3>' +
-        '<p>Startdatetime: ' + location.startdatetimeOriginal + '<br />' +
-            'Current datetime: ' + location.timestampOriginal + '</p>' +
-        '</div>');
+        var content = '<div>'+ '<h2>' + location.runner + '</h2>';
+        if (location.currentAttempt == "1"){
+            content += '<h3>Current attempt</h3>' +
+            '<p>Startdate: ' + location.startdatetime + '<br />' +
+                'Current date: ' + location.timestamp + '</p>' 
+        }
+        if (location.currentAttempt != "1"){
+            // compared to current attempt
+            content += '<h3>Compared to current attempt</h3>' +
+            '<p>Startdate: ' + location.startdatetime + '<br />' +
+                'Current date compared to FKT attempt: ' + location.timestamp + '</p>' 
+
+            // previous attempt
+            content += '<h3>Original attempt</h3>' +
+            '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
+                'Enddate: ' + location.enddatetimeOriginal + '</p>' +
+
+                '<p>Current FKT: ' + location.fkt + '</p>'
+            '</div>';
+        }
+        infowindow.setContent(content);
         infowindow.open(map, marker);
         });
         return marker;
