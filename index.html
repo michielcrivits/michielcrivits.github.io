@@ -49,7 +49,7 @@
 
         async function initialLoadGPXDistances(filename)
         {
-            const xml = await fetch("/src/HRP.gpx")
+            const xml = await fetch(filename)
             .then((res) => res.text())
             .then((str) =>
                 new window.DOMParser().parseFromString(str, "text/xml")
