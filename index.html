@@ -192,14 +192,14 @@
             if (location.currentAttempt == "1") {
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '<br />' +
+                'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)</p>'
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
                 content += '<h3>Compared to current attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '<br />' +
+                'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)</p>'
 
                 // previous attempt
