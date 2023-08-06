@@ -24,7 +24,7 @@
 		//<![CDATA[
 
 		var MyMap;
-        var locations = [];
+        var locationsABC = [];
         var distances = [];
         var totalDistance = 0;
 
@@ -158,6 +158,9 @@
                 locations.push(location);
             });
 
+            var currentFKTDistanceDone = locations.find((element) => element.currentFKT == '1');
+            locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone});
+            
             setLocations(MyMap, locations);
         });
         
@@ -174,6 +177,7 @@
         }
 
         function setLocations(map, locations) {
+            locationsABC = locations;
         var bounds = new google.maps.LatLngBounds();
         // Create pop-up boxes, appear when the marker is clicked on
         var infowindow = new google.maps.InfoWindow({
