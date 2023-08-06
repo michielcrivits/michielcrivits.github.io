@@ -161,7 +161,8 @@
             setLocations(MyMap, locations);
         });
         
-        var currentFKTDistanceDone = locations.find((element) => element.currentFKT == 1).distanceDone;
+        var currentFKTDistanceDone = locations.find((element) => element.currentFKT == 1);
+        console.log(currentFKTDistanceDone);
         locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone
             
         });
@@ -211,7 +212,7 @@
                 content += '<h3>Original attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
                 'Enddate: ' + location.enddatetimeOriginal + '<br />' +
-                'Distance done: ' + Math.ceil(totalDistance) + 'km (100%)</p>'
+                'Progress: ' + Math.ceil(totalDistance) + 'km / ' + Math.ceil(totalDistance) + 'km (100%)</p>'
 
                 '<p><b>FKT: ' + location.fkt + '</b></p>'
                 '</div>';
