@@ -196,11 +196,14 @@
         google.maps.event.addListener(marker, 'click', function () {
             var content = '<div>' + '<h2>' + location.runner + ' (' + location.startdatetime.substring(6, 10) + ')' + '</h2>';
             if (location.currentAttempt == "1") {
-                content += '<h3>FKT attempt</h3>' +
+                var text = '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
+
+                content += text;
+                document.getElementById('fkt_attempt').innerHTML = text;
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
@@ -257,6 +260,7 @@
         <p>Like with other famous trails, there is not one single HRP route, but variants exist and it is possible switch between the high-route and lower alternatives on the GR 10/GR 11.</p>
         <p><b>Official website: </b><a href="https://fastestknowntime.com/route/haute-route-pyrenees-spain-andorra-france">https://fastestknowntime.com/route/haute-route-pyrenees-spain-andorra-france</a></p>
         <h2>FKT Attempt</h2>
+        <div id="fkt_attempt"></div>
         <b>Startdate: </b>02/08/2023 05:17:30<br />
         <b>Crew: </b>Supported by Wouter Gunst<br />
         <b>Tracker: </b>Garmin Inreach (<a href="https://share.garmin.com/WannesCrivits">https://share.garmin.com/WannesCrivits</a>)<br /><br />
