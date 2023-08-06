@@ -159,7 +159,7 @@
                 locations.push(location);
             });
 
-            var currentFKTDistanceDone = locations.find((element) => element.currentFKT === '1');
+            var currentFKTDistanceDone = locations.find((element) => element.currentFKT === '1').distanceDne;
             locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone});
 
             setLocations(MyMap, locations);
@@ -247,7 +247,7 @@
             await initialLoadGPXDistances("HRP.gpx.xml");
 
             addMarkers();
-            fillVsCurrentFKT();
+            //fillVsCurrentFKT();
 		}
 
 		//]]>
