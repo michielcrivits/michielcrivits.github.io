@@ -160,8 +160,8 @@
 
             setLocations(MyMap, locations);
         });
-        
-        var currentFKTDistanceDone = locations.find((element) => element.currentFKT == 1);
+        console.log(locations[1].currentFKT);
+        var currentFKTDistanceDone = locations.find((element) => element.currentFKT == '1');
         console.log(currentFKTDistanceDone);
         locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone
             
