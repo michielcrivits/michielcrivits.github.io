@@ -160,7 +160,7 @@
 
             var currentFKTDistanceDone = locations.find((element) => element.currentFKT == '1');
             locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone});
-            
+
             setLocations(MyMap, locations);
         });
         
@@ -171,9 +171,9 @@
         //});
         }
         function fillVsCurrentFKT(){
-            console.log(locations[0].runner);
-            console.log(locations[0].currentFKT);
-            console.log(locations[1].currentFKT);
+            console.log(locationsABC[0].runner);
+            console.log(locationsABC[0].currentFKT);
+            console.log(locationsABC[1].currentFKT);
         }
 
         function setLocations(map, locations) {
@@ -185,7 +185,6 @@
             });
         for (var i = 0; i < locations.length; i++) {
             var new_marker = createMarker(map, locations[i], infowindow);
-            console.log(locations[i].runner)
             bounds.extend(new_marker.position);
         }
         //map.fitBounds(bounds); // zoom to latest marker
