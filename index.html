@@ -107,13 +107,13 @@
         if (location.currentAttempt == "1"){
             content += '<h3>FKT attempt</h3>' +
             '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Current date: ' + location.timestamp + '</p>' 
+                'Latest trackpoint: ' + location.timestamp + '</p>' 
         }
         if (location.currentAttempt != "1"){
             // compared to current attempt
             content += '<h3>Compared to current attempt</h3>' +
             '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Current date: ' + location.timestamp + '</p>' 
+                'Latest trackpoint: ' + location.timestamp + '</p>' 
 
             // previous attempt
             content += '<h3>Original attempt</h3>' +
