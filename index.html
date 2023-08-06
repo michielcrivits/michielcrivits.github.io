@@ -79,17 +79,20 @@
 
             return old;
             }, []);
+            console.log('nr of distances: ' + distances.length)
         }
 
         function GetDistanceDone(coord1){
             var index = GetNearestTrackPnt(coord1);
             var distanceDone = GetDistanceToTrackPnt(index);
+            console.log(distanceDone);
             return distanceDone;
         }
 
         function GetNearestTrackPnt(coord1) {
         var indexShortestDistance = -1;
         var shortestDistance = -1;
+        
         distances.forEach((element, index) => {
           var distance = haversine_distance(coord1, element.latLng);
 
