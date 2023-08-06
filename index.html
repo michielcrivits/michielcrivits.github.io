@@ -152,14 +152,18 @@
                 location.fkt = this[9];
                 location.currentAttempt = this[10];
                 location.currentFKT = this[11];
-                location.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))
+                location.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))));
+                location.vsCurrentFKT = 0;
 
-                
-        ))
                 locations.push(location);
             });
 
             setLocations(MyMap, locations);
+        });
+        
+        var currentFKTDistanceDone = locations.find((element) => element.currentFKT == 1).distanceDone;
+        locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone
+            
         });
         }
 
@@ -193,7 +197,8 @@
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
-                'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)</p>'
+                'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
+                'Vs current FKT: ' + location.vsCurrentFKT + 'km</p>'
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
