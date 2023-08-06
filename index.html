@@ -196,8 +196,8 @@
         google.maps.event.addListener(marker, 'click', function () {
             var content = '<div>' + '<h2>' + location.runner + ' (' + location.startdatetime.substring(6, 10) + ')' + '</h2>';
             if (location.currentAttempt == "1") {
-                var content += '<h3>FKT attempt</h3>';
-                text = '<p>Startdate: ' + location.startdatetime + '<br />' +
+                content += '<h3>FKT attempt</h3>';
+                var text = '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
@@ -241,7 +241,6 @@
             await initialLoadGPXDistances("HRP.gpx.xml");
 
             addMarkers();
-            //fillVsCurrentFKT();
 		}
 
 		//]]>
