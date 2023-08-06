@@ -159,7 +159,7 @@
                 locations.push(location);
             });
 
-            var currentFKTDistanceDone = locations.find((element) => element.currentFKT === '1').distanceDne;
+            var currentFKTDistanceDone = locations.find((element) => element.currentFKT === '1').distanceDone;
             locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone});
 
             setLocations(MyMap, locations);
