@@ -83,10 +83,8 @@
         }
 
         function GetDistanceDone(coord1){
-            console.log(coord1.lat(), coord1.lng())
             var index = GetNearestTrackPnt(coord1);
             var distanceDone = GetDistanceToTrackPnt(index);
-            console.log(distanceDone);
             return distanceDone;
         }
 
@@ -156,7 +154,7 @@
         ))
                 locations.push(location);
             });
-            console.log(locations[0].latitude, locations[0].longitude);
+
             setLocations(MyMap, locations);
         });
         }
@@ -191,13 +189,14 @@
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br />' +
-                'Distance done: ' + location.distanceDone + '</p>'
+                'Distance done: ' + Math.ceil(location.distanceDone) + 'km</p>'
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
                 content += '<h3>Compared to current attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '</p>'
+                'Latest trackpoint: ' + location.timestamp + '<br />'
+                'Distance done: ' + Math.ceil(location.distanceDone) + 'km</p>'
 
                 // previous attempt
                 content += '<h3>Original attempt</h3>' +
