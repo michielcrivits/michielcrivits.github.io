@@ -109,7 +109,7 @@
 
       function GetDistanceToTrackPnt(index) {
         var totalDistance = 0.0;
-        for (let i = 0; i < index; i++) {
+        for (let i = 0; i <= index; i++) {
           totalDistance += distances[i].distanceToPreviousTrackPnt;
         }
         return totalDistance;
