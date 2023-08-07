@@ -208,7 +208,8 @@
             if (location.currentAttempt == "1") {
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
+                'Latest trackpoint: ' + location.timestamp + '<br />' +
+                'Duraton: ' + getDateDiff(location.startdatetime, location.timestamp) + '<br /><br />'
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
             }
@@ -218,7 +219,7 @@
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)</p>'
-
+                
                 // previous attempt
                 content += '<h3>Original attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
@@ -234,7 +235,19 @@
         return marker;
         }
 
+        function getDateDiff(startTimestamp, endTimestamp){
+            var seconds = Math.floor((endTimestamp - (startTimestamp))/1000);
+            var minutes = Math.floor(seconds/60);
+            var hours = Math.floor(minutes/60);
+            var days = Math.floor(hours/24);
 
+            hours = hours-(days*24);
+            minutes = minutes-(days*24*60)-(hours*60);
+            seconds = seconds-(days*24*60*60)-(hours*60*60)-(minutes*60);
+            
+            var diffString = days + ' days ' + hours + ' hours ' + minutes + ' minutes';
+            return diffString;
+        }
 
 
 		async function initialiseMap()
