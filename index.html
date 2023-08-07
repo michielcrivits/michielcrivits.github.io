@@ -236,6 +236,10 @@
         }
 
         function getDateDiff(startTimestamp, endTimestamp){
+            console.log(startTimestamp);
+            console.log(endTimestamp);
+            console.log(endTimestamp - startTimestamp);
+            console.log(Date.parse(endTimestamp) - Date.parse(startTimestamp));
             var seconds = Math.floor((endTimestamp - (startTimestamp))/1000);
             var minutes = Math.floor(seconds/60);
             var hours = Math.floor(minutes/60);
