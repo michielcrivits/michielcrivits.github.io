@@ -167,7 +167,7 @@
             var currentAttemptLocation = locations.find((element) => element.currentAttempt === '1');
             var content = '<b>Startdate: </b>' + currentAttemptLocation.startdatetime + '<br />' +
                 '<b>Latest trackpoint: </b>' + currentAttemptLocation.timestamp + '<br />' +
-                'Duraton: ' + getDateDiff(location.startdatetime, location.timestamp) + '<br /><br />' +
+                '<b>Duration: </b>' + getDateDiff(currentAttemptLocation.startdatetime, currentAttemptLocation.timestamp) + '<br /><br />' +
                 '<b>Progress: </b>' + Math.ceil(currentAttemptLocation.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(currentAttemptLocation.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 '<b>Vs current FKT: </b>' + Math.ceil(currentAttemptLocation.vsCurrentFKT) + 'km</p>'
 
@@ -210,7 +210,7 @@
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br />' +
-                'Duraton: ' + getDateDiff(location.startdatetime, location.timestamp) + '<br /><br />' +
+                'Duration: ' + getDateDiff(location.startdatetime, location.timestamp) + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
             }
