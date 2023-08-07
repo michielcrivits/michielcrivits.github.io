@@ -139,7 +139,7 @@
     }
                 
         function addMarkers() {
-        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:L7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
+        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:M7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
             var locations = [];
             $(data.values).each(function () {
                 var location = {};
@@ -154,6 +154,7 @@
                 location.fkt = this[9];
                 location.currentAttempt = this[10];
                 location.currentFKT = this[11];
+                location.image = this[12];
                 location.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))));
                 location.vsCurrentFKT = 0;
 
@@ -200,11 +201,12 @@
             lat: parseFloat(location.latitude),
             lng: parseFloat(location.longitude)
         };
+        console.log(location.image);
         var marker = new google.maps.Marker({
                 position: position,
                 map: map,
                 title: location.runner + ' (' + location.startdatetime.substring(6, 10) + ')',
-                icon: "/src/wannescrivits_40px.png"
+                icon: location.image
             });
         google.maps.event.addListener(marker, 'click', function () {
             var content = '<div>' + '<h2>' + location.runner + ' (' + location.startdatetime.substring(6, 10) + ')' + '</h2>';
