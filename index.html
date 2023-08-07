@@ -212,7 +212,7 @@
                 content += '<h3>FKT attempt</h3>' +
                 '<p>Startdate: ' + location.startdatetime + '<br />' +
                 'Latest trackpoint: ' + location.timestamp + '<br />' +
-                'Duration: ' + getDateDiff(moment(location.startDate, 'DD/MM/YYYY HH:mm:ss').toDate(), moment().toDate()) + '<br /><br />' +
+                'Duration: ' + getDateDiff(moment(location.startdatetime, 'DD/MM/YYYY HH:mm:ss').toDate(), moment().toDate()) + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
             }
