@@ -211,8 +211,6 @@
                 'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
                 'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
-
-                content += text;
             }
             if (location.currentAttempt != "1") {
                 // compared to current attempt
