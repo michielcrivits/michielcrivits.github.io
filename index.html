@@ -18,6 +18,7 @@
 		
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
         <script type = "text/JavaScript" src = " https://MomentJS.com/downloads/moment.js"></script>
+        <script type="text/javascript" src="https://www.google.com/jsapi"></script>
 		<script src="loadgpx.js" type="text/javascript"></script>
         <script src="distanceCalculator.js" type="text/javascript"></script>
 		<script type="text/javascript">
@@ -26,7 +27,7 @@
 
 		var MyMap;
         var locationsABC = [];
-        var distances = [];
+        var gpxPath = [];
         var totalDistance = 0;
 
 		function loadGPXFileIntoGoogleMap(map, filename)
@@ -49,7 +50,7 @@
 			request.send(null);
 		}
 
-        async function initialLoadGPXDistances(filename)
+        async function initialLoadGPX(filename)
         {
             const xml = await fetch(filename)
             .then((res) => res.text())
@@ -63,7 +64,7 @@
                 Number(element.getAttribute("lon"))
                 )
             );
-            distances = coords.reduce((old, ne, index, original) => {
+            gpxPath = coords.reduce((old, ne, index, original) => {
             if (index > 0) {
                 var trackPnt = {};
                 trackPnt.latLng = ne;
@@ -82,7 +83,7 @@
             return old;
             }, []);
 
-            totalDistance = GetDistanceToTrackPnt(distances.length-1);
+            totalDistance = GetDistanceToTrackPnt(gpxPath.length-1);
             //console.log('nr of distances: ' + distances.length)
         }
 
@@ -96,7 +97,7 @@
         var indexShortestDistance = -1;
         var shortestDistance = -1;
         
-        distances.forEach((element, index) => {
+        gpxPath.forEach((element, index) => {
           var distance = haversine_distance(coord1, element.latLng);
 
           if (shortestDistance == -1 || distance < shortestDistance) {
@@ -111,7 +112,7 @@
       function GetDistanceToTrackPnt(index) {
         var totalDistance = 0.0;
         for (let i = 0; i <= index; i++) {
-          totalDistance += distances[i].distanceToPreviousTrackPnt;
+          totalDistance += gpxPath[i].distanceToPreviousTrackPnt;
         }
         return totalDistance;
       }
@@ -137,36 +138,47 @@
         );
     return d;
     }
-                
-        function addMarkers() {
-        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:M7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
-            var locations = [];
+        
+    function processRunners()
+    {
+        $.getJSON("https://sheets.googleapis.com/v4/spreadsheets/17Qc_MMVV5NTWGC_io--JBPWmEPplBZQOdrlt3sx177A/values/Overview!A5:N7?key=AIzaSyCevCgtTXxREUE-dilAREbSL6_6TmCSpAQ", function (data) {
+            var runners = [];
             $(data.values).each(function () {
-                var location = {};
-                location.runner = this[0];
-                location.startdatetime = this[2];
-                location.startdatetimeOriginal = this[1];
-                location.enddatetimeOriginal = this[3];
-                location.timestamp = this[5];
-                location.timestampOriginal = this[6];
-                location.latitude = parseFloat(this[7]);
-                location.longitude = parseFloat(this[8]);
-                location.fkt = this[9];
-                location.currentAttempt = this[10];
-                location.currentFKT = this[11];
-                location.image = this[12];
-                location.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))));
-                location.vsCurrentFKT = 0;
+                var runner = {};
+                runner.runner = this[0];
+                runner.startdatetime = this[2];
+                runner.startdatetimeOriginal = this[1];
+                runner.enddatetimeOriginal = this[3];
+                runner.timestamp = this[5];
+                runner.timestampOriginal = this[6];
+                runner.latitude = parseFloat(this[7]);
+                runner.longitude = parseFloat(this[8]);
+                runner.fkt = this[9];
+                runner.currentAttempt = this[10];
+                runner.currentFKT = this[11];
+                runner.image = this[12];
+                runner.sheetName = this[13];
+                runner.distanceDone = GetDistanceDone(new google.maps.LatLng(Number(parseFloat(this[7])),Number(parseFloat(this[8]))));
+                runner.vsCurrentFKT = 0;
 
-                locations.push(location);
+                runners.push(runner);
             });
 
+            addMarkers(runners);
+            addDailyStats(runners);
+        });
+
+    }
+
+        function addMarkers(runners) {
+        
+
             // Calculate distance diff with current FKT
-            var currentFKTDistanceDone = locations.find((element) => element.currentFKT === '1').distanceDone;
-            locations.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone});
+            var currentFKTDistanceDone = runners.find((element) => element.currentFKT === '1').distanceDone;
+            runners.forEach(element => {element.vsCurrentFKT = element.distanceDone - currentFKTDistanceDone});
 
             // Add information about current attempt
-            var currentAttemptLocation = locations.find((element) => element.currentAttempt === '1');
+            var currentAttemptLocation = runners.find((element) => element.currentAttempt === '1');
             var content = '<b>Startdate: </b>' + currentAttemptLocation.startdatetime + '<br />' +
                 '<b>Latest trackpoint: </b>' + currentAttemptLocation.timestamp + '<br />' +
                 '<b>Duration: </b>' + getDateDiff(moment(currentAttemptLocation.startdatetime, 'DD/MM/YYYY HH:mm:ss').toDate(), moment().toDate()) + '<br /><br />' +
@@ -175,63 +187,63 @@
 
             document.getElementById('fkt_stats').innerHTML = content;
 
-            setLocations(MyMap, locations);
-        });
+            setLocations(MyMap, runners);
+        
         
         }
         
 
-        function setLocations(map, locations) {
-            locationsABC = locations;
+        function setLocations(map, runners) {
+            locationsABC = runners;
         var bounds = new google.maps.LatLngBounds();
         // Create pop-up boxes, appear when the marker is clicked on
         var infowindow = new google.maps.InfoWindow({
                 content: "Content String"
             });
-        for (var i = 0; i < locations.length; i++) {
-            var new_marker = createMarker(map, locations[i], infowindow);
+        for (var i = 0; i < runners.length; i++) {
+            var new_marker = createMarker(map, runners[i], infowindow);
             bounds.extend(new_marker.position);
         }
         //map.fitBounds(bounds); // zoom to latest marker
         }
 
-        function createMarker(map, location, infowindow) {
+        function createMarker(map, runner, infowindow) {
 
         var position = {
-            lat: parseFloat(location.latitude),
-            lng: parseFloat(location.longitude)
+            lat: parseFloat(runner.latitude),
+            lng: parseFloat(runner.longitude)
         };
         
         var marker = new google.maps.Marker({
                 position: position,
                 map: map,
-                title: location.runner + ' (' + location.startdatetime.substring(6, 10) + ')',
-                icon: location.image
+                title: runner.runner + ' (' + runner.startdatetime.substring(6, 10) + ')',
+                icon: runner.image
             });
         google.maps.event.addListener(marker, 'click', function () {
-            var content = '<div>' + '<h2>' + location.runner + ' (' + location.startdatetime.substring(6, 10) + ')' + '</h2>';
-            if (location.currentAttempt == "1") {
+            var content = '<div>' + '<h2>' + runner.runner + ' (' + runner.startdatetime.substring(6, 10) + ')' + '</h2>';
+            if (runner.currentAttempt == "1") {
                 content += '<h3>FKT attempt</h3>' +
-                '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '<br />' +
-                'Duration: ' + getDateDiff(moment(location.startdatetime, 'DD/MM/YYYY HH:mm:ss').toDate(), moment().toDate()) + '<br /><br />' +
-                'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
-                'Vs current FKT: ' + Math.ceil(location.vsCurrentFKT) + 'km</p>'
+                '<p>Startdate: ' + runner.startdatetime + '<br />' +
+                'Latest trackpoint: ' + runner.timestamp + '<br />' +
+                'Duration: ' + getDateDiff(moment(runner.startdatetime, 'DD/MM/YYYY HH:mm:ss').toDate(), moment().toDate()) + '<br /><br />' +
+                'Progress: ' + Math.ceil(runner.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(runner.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
+                'Vs current FKT: ' + Math.ceil(runner.vsCurrentFKT) + 'km</p>'
             }
-            if (location.currentAttempt != "1") {
+            if (runner.currentAttempt != "1") {
                 // compared to current attempt
                 content += '<h3>Compared to current attempt</h3>' +
-                '<p>Startdate: ' + location.startdatetime + '<br />' +
-                'Latest trackpoint: ' + location.timestamp + '<br /><br />' +
-                'Progress: ' + Math.ceil(location.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(location.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)</p>'
+                '<p>Startdate: ' + runner.startdatetime + '<br />' +
+                'Latest trackpoint: ' + runner.timestamp + '<br /><br />' +
+                'Progress: ' + Math.ceil(runner.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(runner.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)</p>'
                 
                 // previous attempt
                 content += '<h3>Original attempt</h3>' +
-                '<p>Startdate: ' + location.startdatetimeOriginal + '<br />' +
-                'Enddate: ' + location.enddatetimeOriginal + '<br />' +
+                '<p>Startdate: ' + runner.startdatetimeOriginal + '<br />' +
+                'Enddate: ' + runner.enddatetimeOriginal + '<br />' +
                 'Progress: ' + Math.ceil(totalDistance) + 'km / ' + Math.ceil(totalDistance) + 'km (100%)</p>'
 
-                '<p><b>FKT: ' + location.fkt + '</b></p>'
+                '<p><b>FKT: ' + runner.fkt + '</b></p>'
                 '</div>';
             }
             infowindow.setContent(content);
@@ -257,6 +269,9 @@
             return diffString;
         }
 
+        function addDailyStats(){
+
+        }
 
 		async function initialiseMap()
 		{
@@ -267,9 +282,15 @@
 			});
 
 			loadGPXFileIntoGoogleMap(MyMap, "HRP.gpx.xml");
-            await initialLoadGPXDistances("HRP.gpx.xml");
 
-            addMarkers();
+            
+            await initialLoadGPX("HRP.gpx.xml");
+
+            processRunners();
+            //addMarkers();
+
+            //addDailyStats();
+            
 		}
 
 		//]]>
@@ -292,6 +313,6 @@
         <b>Crew: </b>Supported by Wouter Gunst<br />
         <b>Tracker: </b>Garmin Inreach (<a href="https://share.garmin.com/WannesCrivits">https://share.garmin.com/WannesCrivits</a>)<br /><br />
 		<div id="map" style="width: 100%; height: 100%;"></div>
-        <div id="chart_div"></div>
+        <div id="daily_stats"></div>
 	</body>
 </html>
