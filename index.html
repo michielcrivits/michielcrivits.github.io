@@ -17,6 +17,7 @@
 
 		
         <script src="https://code.jquery.com/jquery-3.1.1.min.js"></script>
+        <script type = "text/JavaScript" src = " https://MomentJS.com/downloads/moment.js"></script>
 		<script src="loadgpx.js" type="text/javascript"></script>
         <script src="distanceCalculator.js" type="text/javascript"></script>
 		<script type="text/javascript">
@@ -167,7 +168,7 @@
             var currentAttemptLocation = locations.find((element) => element.currentAttempt === '1');
             var content = '<b>Startdate: </b>' + currentAttemptLocation.startdatetime + '<br />' +
                 '<b>Latest trackpoint: </b>' + currentAttemptLocation.timestamp + '<br />' +
-                '<b>Duration: </b>' + getDateDiff(currentAttemptLocation.startdatetime, currentAttemptLocation.timestamp) + '<br /><br />' +
+                '<b>Duration: </b>' + getDateDiff(moment(currentAttemptLocation.startdatetime, 'DD/MM/YYYY HH:mm:ss').toDate(), moment(currentAttemptLocation.timestamp, 'DD/MM/YYYY HH:mm:ss').toDate()) + '<br /><br />' +
                 '<b>Progress: </b>' + Math.ceil(currentAttemptLocation.distanceDone) + 'km / ' + Math.ceil(totalDistance) + 'km (' + Math.ceil(Math.ceil(currentAttemptLocation.distanceDone) / Math.ceil(totalDistance) *100.0)+'%)<br />' +
                 '<b>Vs current FKT: </b>' + Math.ceil(currentAttemptLocation.vsCurrentFKT) + 'km</p>'
 
@@ -236,11 +237,11 @@
         return marker;
         }
 
-        function getDateDiff(startTimestamp, endTimestamp){
-            console.log(Date.parse(startTimestamp));
-            console.log(Date.parse(endTimestamp));
-            console.log((Date.parse(endTimestamp) - Date.parse(startTimestamp)));
-            var seconds = Math.floor((Date.parse(endTimestamp) - Date.parse(startTimestamp))/1000);
+        function getDateDiff(startDate, endDate){
+            console.log(Date.parse(startDate));
+            console.log(Date.parse(endDate));
+            console.log((Date.parse(endDate) - Date.parse(startDate)));
+            var seconds = Math.floor((Date.parse(endDate) - Date.parse(startDate))/1000);
             var minutes = Math.floor(seconds/60);
             var hours = Math.floor(minutes/60);
             var days = Math.floor(hours/24);
