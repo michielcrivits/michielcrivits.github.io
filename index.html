@@ -203,8 +203,8 @@
         var marker = new google.maps.Marker({
                 position: position,
                 map: map,
-                title: location.runner + ' (' + location.startdatetime.substring(6, 10) + ')',
-                icon: "/src/wannescrivits.jpg"
+                title: location.runner + ' (' + location.startdatetime.substring(6, 10) + ')'//,
+                //icon: "/src/wannescrivits.jpg"
             });
         google.maps.event.addListener(marker, 'click', function () {
             var content = '<div>' + '<h2>' + location.runner + ' (' + location.startdatetime.substring(6, 10) + ')' + '</h2>';
