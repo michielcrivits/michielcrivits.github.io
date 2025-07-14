@@ -30,24 +30,21 @@
         var gpxPath = [];
         var totalDistance = 0;
 
-		function loadGPXFileIntoGoogleMap(map, filename)
-		{
-			var request = new XMLHttpRequest();
-			request.open("GET", filename, true);
-			request.onreadystatechange = function()
-			{
-				if (request.readyState == 4)
-				{
-					parser = new GPXParser(request.responseXML, map);
-					parser.setTrackColour("#ff0000");					// Set the track line colour
-					parser.setTrackWidth(3);							// Set the track line width
-					parser.setMinTrackPointDelta(0.001);				// Set the minimum distance between track points
-					parser.centerAndZoom(request.responseXML);			// Center and Zoom the map over all the points.
-					parser.addTrackpointsToMap();						// Add the trackpoints
-					parser.addWaypointsToMap();							// Add the waypoints
-				}
-			}
-			request.send(null);
+	function loadGPXFileIntoGoogleMap(map, filename, color) {
+		  var request = new XMLHttpRequest();
+		  request.open("GET", filename, true);
+		  request.onreadystatechange = function () {
+		    if (request.readyState == 4) {
+		      var parser = new GPXParser(request.responseXML, map);
+		      parser.setTrackColour(color || "#ff0000");    // Use provided color, fallback to red if not specified
+		      parser.setTrackWidth(3);                      // Set the track line width
+		      parser.setMinTrackPointDelta(0.001);          // Set the minimum distance between track points
+		      parser.centerAndZoom(request.responseXML);    // Center and zoom the map over all the points
+		      parser.addTrackpointsToMap();                 // Add the trackpoints
+		      parser.addWaypointsToMap();                   // Add the waypoints
+		    }
+		  };
+		  request.send(null);
 		}
 
         async function initialLoadGPX(filename)
@@ -286,8 +283,8 @@
 
             
             //await initialLoadGPX("HRP.gpx.xml");
-
-		loadGPXFileIntoGoogleMap(MyMap, "noorvanderveen.gpx");
+		loadGPXFileIntoGoogleMap(MyMap, "HRP.gpx.xml","#84b8f0"); // Original HRP
+		loadGPXFileIntoGoogleMap(MyMap, "noorvanderveen.gpx","#ff0000");
 
             
             await initialLoadGPX("noorvanderveen.gpx");
